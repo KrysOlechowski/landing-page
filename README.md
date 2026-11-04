@@ -19,6 +19,7 @@ Strona będzie dostępna pod adresem http://localhost:3000.
 - `npm run dev` — serwer deweloperski z automatycznym odświeżaniem.
 - `npm run lint` — sprawdzenie kodu przez ESLint.
 - `npm run typecheck` — wygenerowanie typów tras i sprawdzenie TypeScript.
+- `npm test` — testy generowania palet, konwersji kolorów i dostępu do zapisu.
 - `npm run build` — przygotowanie wersji produkcyjnej.
 - `npm start` — uruchomienie wcześniej zbudowanej wersji produkcyjnej.
 
@@ -36,6 +37,13 @@ src/app/
   layout.tsx    # wspólny układ, język strony i metadane
   page.tsx      # strona główna: /
   globals.css   # Tailwind i style globalne
+  [section]/    # wstępne podstrony z menu; treść do uzupełnienia
+src/components/
+  landscape.tsx       # niezależne elementy SVG krajobrazu
+  site-header.tsx     # logo i nawigacja
+  palette-studio.tsx  # lokalny edytor kolorów
+src/config/palette.json # paleta używana przez stronę
+src/lib/palette.ts      # kolory OKLCH, odcienie, losowanie i kontrast
 next.config.ts  # konfiguracja Next.js
 ```
 
@@ -48,9 +56,43 @@ Alias `@/` wskazuje na katalog `src/`.
 obsługi kliknięć albo API przeglądarki. Animacja CSS sama w sobie
 nie wymaga komponentu klienckiego.
 
-Strona startowa ma wyłącznie neutralną treść zastępczą. Projekt nie ma
-biblioteki animacyjnej; wygląd, grafiki i animacje ustalimy osobno.
-Używa fontu systemowego, więc build nie wymaga pobierania fontów.
+Krajobraz to SVG renderowane bezpośrednio w React. Pagórki, drzewa,
+słońce, ptaki i motyle korzystają ze wspólnych zmiennych CSS. Ruch ptaków
+i skrzydeł motyli działa w CSS, bez biblioteki animacyjnej. Ustawienie
+systemowe `prefers-reduced-motion` zatrzymuje animacje. Font jest systemowy,
+więc build nie wymaga pobierania fontów.
+
+## Edytor kolorów
+
+1. Uruchom `npm run dev` i otwórz http://localhost:3000.
+2. Kliknij **Paleta · lokalnie** w lewym dolnym rogu.
+3. Zmień kolor próbnikiem lub wpisz HEX. Podgląd działa od razu.
+4. Wypróbuj gotową paletę, **Losuj paletę** albo **Losuj odcienie pagórków**.
+   Kłódki zachowują wybrane kolory podczas losowania i wyboru gotowych palet.
+   Losowanie odcieni pagórków zachowuje ich ton, zmienia jasność i intensywność.
+5. Suwak ustawia różnice między odcieniami. Wyłącz **Osobny akcent środkowego
+   pagórka**, aby wszystkie pagórki korzystały z jednej rodziny kolorów.
+   Przy włączonym akcencie środkowy pagórek używa koloru **Zieleń**.
+6. Strzałki cofają i ponawiają zmiany. **Przywróć zapisaną** przywraca ostatnią
+   paletę zapisaną do projektu.
+7. **Zachowaj** zapisuje nazwany wariant w tej przeglądarce. Szkic także
+   jest zapamiętywany lokalnie i przywracany przy otwarciu edytora.
+8. **Zapisz w projekcie** zapisuje aktywną paletę do `src/config/palette.json`.
+   Commit i kolejny build/publikacja udostępnią ją wszystkim odwiedzającym.
+   Ikona pobierania pozwala też wyeksportować `palette.json`.
+
+Zapisane w przeglądarce warianty i niezapisany podgląd nie zmieniają strony
+dla innych osób. Edytor nie jest renderowany ani dołączany do klienckich
+plików JS wersji produkcyjnej. Endpoint zapisu zwraca tam 404. W trybie
+deweloperskim zapis dopuszcza tylko żądania z tego samego lokalnego originu,
+waliduje paletę i zapisuje do jednej ustalonej ścieżki.
+
+Plik palety zawiera sześć kolorów bazowych, `spread` (0–1) i `accentHill`
+(osobny kolor środkowego pagórka). Odwiedzający otrzymuje te same kolory
+już w pierwszym HTML — nie losujemy ich podczas renderowania.
+
+Nazwy i treść podstron Work, About, Skills, Notes i Contact są na razie
+punktami startowymi. Nie zawierają wymyślonych projektów ani danych kontaktowych.
 
 Po dodaniu rzeczywistego źródła danych można przećwiczyć `Suspense`,
 streaming oraz `use cache`. Nie ma potrzeby dodawać sztucznych opóźnień

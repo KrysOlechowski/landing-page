@@ -1,17 +1,21 @@
-export default function Home() {
+import { Landscape } from "@/components/landscape";
+import { SiteHeader } from "@/components/site-header";
+import savedPalette from "@/config/palette.json";
+
+export default async function Home() {
+  let editor = null;
+  if (process.env.NODE_ENV === "development") {
+    const { default: PaletteStudio } = await import("@/components/palette-studio");
+    editor = <PaletteStudio initialPalette={savedPalette} />;
+  }
   return (
-    <main className="flex min-h-svh items-center px-6 py-16 sm:px-12">
-      <div className="mx-auto w-full max-w-5xl">
-        <p className="text-sm font-medium tracking-wide text-stone-600">
-          Strona w przygotowaniu
-        </p>
-        <h1 className="mt-5 text-6xl font-semibold tracking-tight sm:text-8xl">
-          devcat
-        </h1>
-        <p className="mt-6 max-w-md text-lg leading-relaxed text-stone-600">
-          Tu powstaje moja strona.
-        </p>
-      </div>
-    </main>
+    <div className="scene">
+      <SiteHeader />
+      <main id="main-content" className="scene-main">
+        <h1 className="sr-only">devcat — moja przestrzeń w internecie</h1>
+        <Landscape />
+      </main>
+      {editor}
+    </div>
   );
 }

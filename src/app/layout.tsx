@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
+import savedPalette from "@/config/palette.json";
+import { paletteVariables } from "@/lib/palette";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -8,8 +11,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pl">
-      <body>{children}</body>
+    <html lang="pl" style={paletteVariables(savedPalette) as CSSProperties}>
+      <body>
+        <a href="#main-content" className="skip-link">Przejdź do treści</a>
+        {children}
+      </body>
     </html>
   );
 }

@@ -1,0 +1,10 @@
+{
+  "paper": "#fff9f3",
+  "ink": "#46200f",
+  "hills": "#e98a24",
+  "sun": "#ff8b26",
+  "plants": "#898233",
+  "wildlife": "#58331d",
+  "spread": 0.65,
+  "accentHill": true
+}
