@@ -1,3 +1,8 @@
+## Git workflow
+
+Do not create commits automatically. After completing changes, provide a suggested
+commit message. Create a commit only if the user explicitly requests it.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
