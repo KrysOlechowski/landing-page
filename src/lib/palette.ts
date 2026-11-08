@@ -1,21 +1,40 @@
 // A small, dependency-free OKLCH palette engine shared by the server and studio.
-export const COLOR_KEYS = ["paper", "ink", "hills", "sun", "plants", "wildlife"] as const;
+export const COLOR_KEYS = ["paper", "header", "cat", "birds", "butterflies", "sun", "hills", "hillAccent", "trees", "plants", "ink"] as const;
 export type ColorKey = (typeof COLOR_KEYS)[number];
 export type Palette = Record<ColorKey, string> & { spread: number; accentHill: boolean };
 export type Oklch = { l: number; c: number; h: number };
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 
-export function isPalette(value: unknown): value is Palette {
+function hasPaletteShape(value: unknown, keys: readonly string[]): boolean {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const candidate = value as Record<string, unknown>;
   return (
-    Object.keys(candidate).length === COLOR_KEYS.length + 2 &&
-    COLOR_KEYS.every((key) => typeof candidate[key] === "string" && /^#[0-9a-f]{6}$/i.test(candidate[key])) &&
+    Object.keys(candidate).length === keys.length + 2 &&
+    keys.every((key) => typeof candidate[key] === "string" && /^#[0-9a-f]{6}$/i.test(candidate[key])) &&
     typeof candidate.spread === "number" &&
     Number.isFinite(candidate.spread) && candidate.spread >= 0 && candidate.spread <= 1 &&
     typeof candidate.accentHill === "boolean"
   );
+}
+
+export function isPalette(value: unknown): value is Palette {
+  return hasPaletteShape(value, COLOR_KEYS);
+}
+
+// Keep drafts and named variants saved before the color groups were separated.
+export function parsePalette(value: unknown): Palette | null {
+  if (isPalette(value)) return value;
+  const legacyKeys = ["paper", "ink", "hills", "sun", "plants", "wildlife"] as const;
+  if (!hasPaletteShape(value, legacyKeys)) return null;
+  const old = value as Record<(typeof legacyKeys)[number], string> & { spread: number; accentHill: boolean };
+  return {
+    paper: old.paper, header: old.ink, cat: old.ink,
+    birds: old.wildlife, butterflies: old.wildlife,
+    sun: old.sun, hills: old.hills, hillAccent: old.plants,
+    trees: old.hills, plants: old.plants, ink: old.ink,
+    spread: old.spread, accentHill: old.accentHill,
+  };
 }
 
 export function hexToOklch(hex: string): Oklch {
@@ -79,7 +98,9 @@ export function paletteVariables(palette: Palette): Record<string, string> {
   const vars: Record<string, string> = {};
   for (const key of COLOR_KEYS) vars[`--scene-${key}`] = palette[key];
   hillTones(palette).forEach((tone, index) => { vars[`--hill-${index}`] = tone; });
-  vars["--hill-accent"] = palette.accentHill ? palette.plants : vars["--hill-7"];
+  vars["--hill-accent"] = palette.accentHill ? palette.hillAccent : vars["--hill-7"];
+  const tree = hexToOklch(palette.trees);
+  vars["--tree-detail"] = oklchToHex({ ...tree, l: clamp(tree.l + 0.07, 0.2, 0.94), c: tree.c * 0.8 });
   return vars;
 }
 
@@ -89,10 +110,15 @@ export function randomizePalette(palette: Palette, locked: readonly ColorKey[], 
   const settings: Record<ColorKey, Oklch> = {
     paper: { l: 0.965 + random() * 0.025, c: 0.008 + random() * 0.014, h: baseHue },
     ink: { l: 0.22 + random() * 0.09, c: 0.025 + random() * 0.035, h: baseHue },
+    header: { l: 0.22 + random() * 0.09, c: 0.025 + random() * 0.035, h: baseHue },
+    cat: { l: 0.24 + random() * 0.1, c: 0.035 + random() * 0.045, h: baseHue + 5 },
+    birds: { l: 0.3 + random() * 0.1, c: 0.035 + random() * 0.035, h: baseHue + 10 },
+    butterflies: { l: 0.32 + random() * 0.1, c: 0.04 + random() * 0.04, h: baseHue + 20 },
     hills: { l: 0.57 + random() * 0.14, c: 0.085 + random() * 0.065, h: baseHue },
     sun: { l: 0.72 + random() * 0.08, c: 0.12 + random() * 0.055, h: baseHue + 25 },
     plants: { l: 0.48 + random() * 0.12, c: 0.075 + random() * 0.055, h: baseHue + 65 },
-    wildlife: { l: 0.3 + random() * 0.1, c: 0.035 + random() * 0.035, h: baseHue + 10 },
+    trees: { l: 0.54 + random() * 0.14, c: 0.08 + random() * 0.06, h: baseHue + 15 },
+    hillAccent: { l: 0.48 + random() * 0.12, c: 0.075 + random() * 0.055, h: baseHue + 65 },
   };
   for (const key of COLOR_KEYS) if (!locked.includes(key)) next[key] = oklchToHex(settings[key]);
   return next;

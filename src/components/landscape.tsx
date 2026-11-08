@@ -42,7 +42,7 @@ export function Sky() {
         <circle cx="305" cy="170" r="72" fill="url(#sun-wash)" strokeWidth="1.8" />
         <circle cx="306" cy="169" r="70.8" strokeWidth=".5" opacity=".3" />
       </g>
-      <g fill="var(--scene-wildlife)">
+      <g fill="var(--scene-birds)">
         <Bird x={54} y={119} delay={0} />
         <Bird x={108} y={150} scale={0.89} delay={-2.4} />
         <Bird x={158} y={180} scale={0.8} delay={-4.8} />
@@ -53,7 +53,7 @@ export function Sky() {
 
 function Pine({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
   return (
-    <g transform={`translate(${x} ${y}) scale(${scale})`} stroke="var(--scene-hills)" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+    <g data-scene="tree" transform={`translate(${x} ${y}) scale(${scale})`} stroke="var(--scene-trees)" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
       <path d="M0 3V-144M0-144-10-122 0-129 10-122Z" />
       {[0, 1, 2, 3, 4, 5].map((level) => {
         const yy = -121 + level * 17;
@@ -67,34 +67,34 @@ function Pine({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
 
 function RoundTree({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
   return (
-    <g transform={`translate(${x} ${y}) scale(${scale})`} fill="none" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M-28-41C-53-34-72-58-61-78-65-95-45-104-30-99-25-132 23-132 29-99 48-104 66-90 61-73 75-54 52-32 30-40 13-18-10-21-28-41Z" fill="var(--scene-paper)" stroke="var(--scene-hills)" strokeWidth="1.7" />
-      <g stroke="var(--scene-hills)" strokeWidth=".65" opacity=".65">
+    <g data-scene="tree" transform={`translate(${x} ${y}) scale(${scale})`} fill="none" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M-28-41C-53-34-72-58-61-78-65-95-45-104-30-99-25-132 23-132 29-99 48-104 66-90 61-73 75-54 52-32 30-40 13-18-10-21-28-41Z" fill="var(--scene-paper)" stroke="var(--scene-trees)" strokeWidth="1.7" />
+      <g stroke="var(--scene-trees)" strokeWidth=".65" opacity=".65">
         <path d="M-29-99C-9-99-8-84-12-74M29-99C11-99 8-84 12-76M-61-78C-48-90-30-84-28-69M61-73C48-85 33-79 29-67M-28-41C-34-53-29-63-20-66M30-40C34-51 31-59 25-63" />
       </g>
-      <g stroke="var(--scene-sun)" strokeWidth="1.8">
+      <g stroke="var(--scene-trees)" strokeWidth="1.8">
         <path d="M0 5V-94M0-66-18-92M0-44-34-70M0-27 29-62M0-27-43-56M0-65 18-85M0-42 29-70" />
         <path d="M-2 4 0-95 2 4" strokeWidth=".6" />
       </g>
-      <path d="M-50-82C-62-67-54-51-43-49M-25-110C-12-123 10-119 19-109" stroke="var(--scene-plants)" strokeWidth="1.1" opacity=".7" />
+      <path d="M-50-82C-62-67-54-51-43-49M-25-110C-12-123 10-119 19-109" stroke="var(--tree-detail)" strokeWidth="1.1" opacity=".7" />
     </g>
   );
 }
 
 function LeafTree({ x, y }: { x: number; y: number }) {
   return (
-    <g transform={`translate(${x} ${y})`} fill="none" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M0-120C-42-87-46-30 0-23 47-28 40-84 0-120Z" fill="var(--scene-paper)" stroke="var(--scene-hills)" strokeWidth="1.7" />
-      <path d="M0 5V-107M0-83-16-97M0-67 22-87M0-49-23-71M0-34 26-57" stroke="var(--scene-hills)" strokeWidth="1.5" />
-      <path d="M-7-108C-28-82-33-44-10-31M8-109C29-80 31-52 16-34" stroke="var(--scene-sun)" strokeWidth=".6" opacity=".65" />
-      <path d="M-1 0V-67" stroke="var(--scene-plants)" strokeWidth="1.6" />
+    <g data-scene="tree" transform={`translate(${x} ${y})`} fill="none" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M0-120C-42-87-46-30 0-23 47-28 40-84 0-120Z" fill="var(--scene-paper)" stroke="var(--scene-trees)" strokeWidth="1.7" />
+      <path d="M0 5V-107M0-83-16-97M0-67 22-87M0-49-23-71M0-34 26-57" stroke="var(--scene-trees)" strokeWidth="1.5" />
+      <path d="M-7-108C-28-82-33-44-10-31M8-109C29-80 31-52 16-34" stroke="var(--tree-detail)" strokeWidth=".6" opacity=".65" />
+      <path d="M-1 0V-67" stroke="var(--scene-trees)" strokeWidth="1.6" />
     </g>
   );
 }
 
 function Acacia({ x, y }: { x: number; y: number }) {
   return (
-    <g transform={`translate(${x} ${y})`} stroke="var(--scene-hills)" strokeWidth="1.7" fill="none" strokeLinecap="round" strokeLinejoin="round">
+    <g data-scene="tree" transform={`translate(${x} ${y})`} stroke="var(--scene-trees)" strokeWidth="1.7" fill="none" strokeLinecap="round" strokeLinejoin="round">
       <path d="M0 4V-133M0-37 32-61M0-56-40-82M0-76 27-103M0-100-29-118" />
       {[
         { x: 0, y: -133, w: 35 }, { x: 10, y: -111, w: 42 },
@@ -121,7 +121,7 @@ function Sprig({ x, y }: { x: number; y: number }) {
 function SeedPlant({ x, y }: { x: number; y: number }) {
   const tips = [[-29, -59], [-16, -75], [0, -82], [17, -73], [31, -58], [-21, -51], [22, -43]];
   return (
-    <g transform={`translate(${x} ${y})`} stroke="var(--scene-sun)" strokeWidth="1.8" fill="none" strokeLinecap="round">
+    <g transform={`translate(${x} ${y})`} stroke="var(--scene-plants)" strokeWidth="1.8" fill="none" strokeLinecap="round">
       <path d="M0 0V-81M0-27-29-56M0-37 31-55M0-45-16-73M0-47 17-71M0-17-21-48M0-18 22-40" />
       {tips.map(([xx, yy], index) => <ellipse key={index} cx={xx} cy={yy} rx="2.6" ry="3.2" fill="var(--scene-paper)" />)}
     </g>
@@ -131,11 +131,11 @@ function SeedPlant({ x, y }: { x: number; y: number }) {
 function Butterfly({ x, y, scale = 1, delay = 0 }: { x: number; y: number; scale?: number; delay?: number }) {
   return (
     <g transform={`translate(${x} ${y}) scale(${scale})`}>
-      <g className="butterfly-float" style={{ "--delay": `${delay}s` } as CSSProperties} fill="var(--scene-wildlife)">
+      <g className="butterfly-float" style={{ "--delay": `${delay}s` } as CSSProperties} fill="var(--scene-butterflies)">
         <path className="butterfly-left" d="M0 0C-11-17-17-5-7 3-14 14-1 15 0 0Z" />
         <path className="butterfly-right" d="M0 0C11-17 17-5 7 3 14 14 1 15 0 0Z" />
         <path d="M-1-4Q0-6 1-4L1 9H-1Z" />
-        <path d="M0-4-3-8M0-4 3-8" fill="none" stroke="var(--scene-wildlife)" strokeWidth=".8" />
+        <path d="M0-4-3-8M0-4 3-8" fill="none" stroke="var(--scene-butterflies)" strokeWidth=".8" />
       </g>
     </g>
   );
@@ -156,7 +156,7 @@ function Grasses({ x, y, width = 45 }: { x: number; y: number; width?: number })
 function HillLayer({ d, tone, lines = 11, step = 8, green = false }: { d: string; tone: number; lines?: number; step?: number; green?: boolean }) {
   const color = green ? "var(--hill-accent)" : `var(--hill-${tone})`;
   return (
-    <g fill="none" strokeLinecap="round">
+    <g data-scene="hill" fill="none" strokeLinecap="round">
       <path d={`${d}L1800 460H-100Z`} fill="var(--scene-paper)" />
       <path d={d} stroke={color} strokeWidth="2.4" />
       {Array.from({ length: lines }, (_, i) => (

@@ -67,12 +67,16 @@ więc build nie wymaga pobierania fontów.
 1. Uruchom `npm run dev` i otwórz http://localhost:3000.
 2. Kliknij **Paleta · lokalnie** w lewym dolnym rogu.
 3. Zmień kolor próbnikiem lub wpisz HEX. Podgląd działa od razu.
+   Osobne kolory mają: tekst headera (nazwa i menu), ikonka kota, ptaki,
+   motyle, słońce, pagórki oraz drzewa. Dodatkowo można zmieniać tło,
+   tekst podstron, rośliny i trawy oraz akcent środkowego pagórka.
 4. Wypróbuj gotową paletę, **Losuj paletę** albo **Losuj odcienie pagórków**.
    Kłódki zachowują wybrane kolory podczas losowania i wyboru gotowych palet.
    Losowanie odcieni pagórków zachowuje ich ton, zmienia jasność i intensywność.
 5. Suwak ustawia różnice między odcieniami. Wyłącz **Osobny akcent środkowego
    pagórka**, aby wszystkie pagórki korzystały z jednej rodziny kolorów.
-   Przy włączonym akcencie środkowy pagórek używa koloru **Zieleń**.
+   Przy włączonym akcencie środkowy pagórek używa koloru **Akcent pagórka**,
+   niezależnego od drzew oraz roślin.
 6. Strzałki cofają i ponawiają zmiany. **Przywróć zapisaną** przywraca ostatnią
    paletę zapisaną do projektu.
 7. **Zachowaj** zapisuje nazwany wariant w tej przeglądarce. Szkic także
@@ -87,9 +91,12 @@ plików JS wersji produkcyjnej. Endpoint zapisu zwraca tam 404. W trybie
 deweloperskim zapis dopuszcza tylko żądania z tego samego lokalnego originu,
 waliduje paletę i zapisuje do jednej ustalonej ścieżki.
 
-Plik palety zawiera sześć kolorów bazowych, `spread` (0–1) i `accentHill`
+Plik palety zawiera jedenaście kolorów bazowych, `spread` (0–1) i `accentHill`
 (osobny kolor środkowego pagórka). Odwiedzający otrzymuje te same kolory
 już w pierwszym HTML — nie losujemy ich podczas renderowania.
+Starsze szkice i nazwane warianty z przeglądarki są automatycznie przeliczane
+na nowy format: dawny kolor zwierząt trafia do ptaków i motyli, dawny kolor
+tekstu do headera i kota, a kolor drzew jest początkowo zgodny z pagórkami.
 
 Nazwy i treść podstron Work, About, Skills, Notes i Contact są na razie
 punktami startowymi. Nie zawierają wymyślonych projektów ani danych kontaktowych.

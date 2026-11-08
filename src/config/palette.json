@@ -1,10 +1,15 @@
 {
-  "paper": "#fff9f3",
-  "ink": "#46200f",
-  "hills": "#e98a24",
-  "sun": "#ff8b26",
-  "plants": "#898233",
-  "wildlife": "#58331d",
-  "spread": 0.65,
+  "paper": "#f6f8f0",
+  "header": "#293d32",
+  "cat": "#293d32",
+  "birds": "#394b38",
+  "butterflies": "#394b38",
+  "sun": "#d6a14b",
+  "hills": "#7e9b77",
+  "hillAccent": "#557c64",
+  "trees": "#7e9b77",
+  "plants": "#557c64",
+  "ink": "#293d32",
+  "spread": 0.75,
   "accentHill": true
 }

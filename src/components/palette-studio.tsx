@@ -2,15 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  COLOR_KEYS, contrastRatio, hillTones, isPalette, paletteVariables,
+  COLOR_KEYS, contrastRatio, hillTones, parsePalette, paletteVariables,
   randomizeHillShades, randomizePalette, type ColorKey, type Palette,
 } from "@/lib/palette";
 import "./palette-studio.css";
 
 const STORAGE_KEY = "devcat-palette-studio-v1";
 const labels: Record<ColorKey, string> = {
-  paper: "Tło", ink: "Tekst i logo", hills: "Pagórki", sun: "Słońce",
-  plants: "Zieleń", wildlife: "Ptaki i motyle",
+  paper: "Tło strony", header: "Tekst headera", cat: "Ikonka kota",
+  birds: "Ptaki", butterflies: "Motyle", sun: "Słońce", hills: "Pagórki",
+  hillAccent: "Akcent pagórka", trees: "Drzewa", plants: "Rośliny i trawy",
+  ink: "Tekst podstron",
 };
 type Favorite = { name: string; palette: Palette };
 type IconName = "palette" | "close" | "lock" | "unlock" | "undo" | "redo" | "shuffle" | "save" | "download";
@@ -56,6 +58,7 @@ export default function PaletteStudio({ initialPalette }: { initialPalette: Pale
   const launcherRef = useRef<HTMLButtonElement>(null);
   const dirty = JSON.stringify(palette) !== JSON.stringify(baseline);
   const contrast = contrastRatio(palette.ink, palette.paper);
+  const headerContrast = contrastRatio(palette.header, palette.paper);
 
   useEffect(() => {
     if (!open) return;
@@ -70,12 +73,18 @@ export default function PaletteStudio({ initialPalette }: { initialPalette: Pale
   function openEditor() {
     try {
       const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
-      if (stored && isPalette(stored.palette)) {
-        setPalette(stored.palette);
-        applyPalette(stored.palette);
+      const restored = stored && parsePalette(stored.palette);
+      if (restored) {
+        setPalette(restored);
+        applyPalette(restored);
       }
       if (stored && Array.isArray(stored.favorites)) {
-        setFavorites(stored.favorites.filter((item: Favorite) => item && typeof item.name === "string" && isPalette(item.palette)).slice(0, 24));
+        setFavorites(stored.favorites.flatMap((item: unknown) => {
+          if (!item || typeof item !== "object") return [];
+          const candidate = item as Record<string, unknown>;
+          const palette = parsePalette(candidate.palette);
+          return typeof candidate.name === "string" && palette ? [{ name: candidate.name, palette }] : [];
+        }).slice(0, 24));
       }
     } catch { /* Start with the project's palette when a saved draft is invalid. */ }
     setOpen(true);
@@ -143,10 +152,10 @@ export default function PaletteStudio({ initialPalette }: { initialPalette: Pale
   }
 
   const presets: Favorite[] = [
-    { name: "Poranek", palette: { paper: "#fff9f3", ink: "#46200f", hills: "#e98a24", sun: "#ff8b26", plants: "#898233", wildlife: "#58331d", spread: 0.65, accentHill: true } },
-    { name: "Szałwia", palette: { paper: "#f6f8f0", ink: "#293d32", hills: "#7e9b77", sun: "#d6a14b", plants: "#557c64", wildlife: "#394b38", spread: 0.75, accentHill: true } },
-    { name: "Lawenda", palette: { paper: "#faf6fc", ink: "#403045", hills: "#9b7cbd", sun: "#dc9d79", plants: "#8b936c", wildlife: "#5f496b", spread: 0.65, accentHill: true } },
-    { name: "Terakota", palette: { paper: "#fff7ef", ink: "#4e2c26", hills: "#b9684b", sun: "#dc9f51", plants: "#8e8852", wildlife: "#634239", spread: 0.8, accentHill: true } },
+    { name: "Poranek", palette: { paper: "#fff9f3", header: "#46200f", cat: "#46200f", birds: "#58331d", butterflies: "#58331d", sun: "#ff8b26", hills: "#e98a24", hillAccent: "#898233", trees: "#e98a24", plants: "#898233", ink: "#46200f", spread: 0.65, accentHill: true } },
+    { name: "Szałwia", palette: { paper: "#f6f8f0", header: "#293d32", cat: "#293d32", birds: "#394b38", butterflies: "#394b38", sun: "#d6a14b", hills: "#7e9b77", hillAccent: "#557c64", trees: "#7e9b77", plants: "#557c64", ink: "#293d32", spread: 0.75, accentHill: true } },
+    { name: "Lawenda", palette: { paper: "#faf6fc", header: "#403045", cat: "#403045", birds: "#5f496b", butterflies: "#5f496b", sun: "#dc9d79", hills: "#9b7cbd", hillAccent: "#8b936c", trees: "#9b7cbd", plants: "#8b936c", ink: "#403045", spread: 0.65, accentHill: true } },
+    { name: "Terakota", palette: { paper: "#fff7ef", header: "#4e2c26", cat: "#4e2c26", birds: "#634239", butterflies: "#634239", sun: "#dc9f51", hills: "#b9684b", hillAccent: "#8e8852", trees: "#b9684b", plants: "#8e8852", ink: "#4e2c26", spread: 0.8, accentHill: true } },
   ];
 
   return (
@@ -205,7 +214,8 @@ export default function PaletteStudio({ initialPalette }: { initialPalette: Pale
               <p>Wspólny ton, różna jasność i intensywność.</p>
               <label className="studio-accent-option"><input type="checkbox" checked={palette.accentHill} onChange={(event) => change({ ...palette, accentHill: event.target.checked })} />Osobny akcent środkowego pagórka</label>
             </div>
-            <p className={`studio-contrast ${contrast < 4.5 ? "studio-contrast-low" : ""}`}>Kontrast tekstu: <strong>{contrast.toFixed(1)}:1</strong><span>{contrast >= 4.5 ? "Czytelny tekst" : "Warto zwiększyć kontrast"}</span></p>
+            <p className={`studio-contrast ${headerContrast < 4.5 ? "studio-contrast-low" : ""}`}>Kontrast headera: <strong>{headerContrast.toFixed(1)}:1</strong><span>{headerContrast >= 4.5 ? "Czytelny tekst" : "Warto zwiększyć kontrast"}</span></p>
+            <p className={`studio-contrast ${contrast < 4.5 ? "studio-contrast-low" : ""}`}>Kontrast podstron: <strong>{contrast.toFixed(1)}:1</strong><span>{contrast >= 4.5 ? "Czytelny tekst" : "Warto zwiększyć kontrast"}</span></p>
             <div className="studio-rule" />
             <h3>Twoje warianty</h3>
             <div className="studio-favorite-form"><input aria-label="Nazwa wariantu" placeholder="np. Morelowy poranek" maxLength={40} value={name} onChange={(event) => setName(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") addFavorite(); }} /><button className="studio-button" onClick={addFavorite}>Zachowaj</button></div>

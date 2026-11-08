@@ -19,7 +19,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid currentColor; outline
 .scene::after { content: ""; position: absolute; z-index: 5; pointer-events: none; inset: 0; opacity: .035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%235c4024' filter='url(%23n)' opacity='.5' d='M0 0h180v180H0z'/%3E%3C/svg%3E"); }
 .site-header { position: relative; z-index: 10; width: calc(100% - 96px); max-width: 1392px; margin: 0 auto; padding-top: 30px; display: flex; align-items: center; justify-content: space-between; gap: 30px; }
 .brand { display: inline-flex; align-items: center; gap: 11px; flex-shrink: 0; font-size: 32px; font-weight: 600; letter-spacing: -1.1px; }
-.cat-mark { width: 32px; height: 37px; }
+.cat-mark { width: 32px; height: 37px; color: var(--scene-cat); }
+.site-header { color: var(--scene-header); }
 .site-header nav { display: flex; align-items: center; gap: clamp(22px, 3.05vw, 51px); }
 .site-header nav a { font-size: 18px; font-weight: 600; padding: 8px 0; text-underline-offset: 7px; }
 .site-header nav a:hover, .site-header nav a[aria-current="page"] { text-decoration: underline; text-decoration-thickness: 1px; }
